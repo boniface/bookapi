@@ -9,7 +9,9 @@ import domain.users.User
 
 import scala.concurrent.Future
 
-abstract class UserTable extends Table[UserTable, User] {
+abstract class UserTable extends Table[UserTable, User] with RootConnector {
+
+  override lazy val tableName = "users"
 
   object siteId extends StringColumn with PartitionKey
 
@@ -26,13 +28,6 @@ abstract class UserTable extends Table[UserTable, User] {
   object password extends StringColumn
 
   object dateCreated extends Col[LocalDateTime]
-
-
-}
-
-abstract class UserTableImpl extends UserTable with RootConnector {
-
-  override lazy val tableName = "users"
 
   def saveEntity(entity: User): Future[ResultSet] = {
     insert
@@ -73,7 +68,9 @@ abstract class UserTableImpl extends UserTable with RootConnector {
   }
 }
 
-abstract class UserByEmailTable extends Table[UserByEmailTable, User] {
+abstract class UserByEmailTable extends Table[UserByEmailTable, User] with RootConnector {
+
+  override lazy val tableName = "usersbyemail"
 
   object siteId extends StringColumn with PrimaryKey
 
@@ -90,13 +87,6 @@ abstract class UserByEmailTable extends Table[UserByEmailTable, User] {
   object password extends StringColumn
 
   object dateCreated extends Col[LocalDateTime]
-
-
-}
-
-abstract class UserByEmailTableImpl extends UserByEmailTable with RootConnector {
-
-  override lazy val tableName = "usersbyemail"
 
   def saveEntity(entity: User): Future[ResultSet] = {
     insert
@@ -126,7 +116,9 @@ abstract class UserByEmailTableImpl extends UserByEmailTable with RootConnector 
   }
 }
 
-abstract class UserByIdTable extends Table[UserByIdTable, User] {
+abstract class UserByIdTable extends Table[UserByIdTable, User] with RootConnector {
+
+  override lazy val tableName = "usersbyids"
 
   object siteId extends StringColumn with PrimaryKey
 
@@ -143,13 +135,6 @@ abstract class UserByIdTable extends Table[UserByIdTable, User] {
   object password extends StringColumn
 
   object dateCreated extends Col[LocalDateTime]
-
-
-}
-
-abstract class UserByIdTableImpl extends UserByIdTable with RootConnector {
-
-  override lazy val tableName = "usersbyids"
 
   def saveEntity(entity: User): Future[ResultSet] = {
     insert

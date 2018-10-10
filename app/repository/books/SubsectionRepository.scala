@@ -11,7 +11,11 @@ import domain.books.Subsection
 import repository.Repository
 import repository.books.impl.cassandra.SubsectionRepositoryImpl
 
-trait SubsectionRepository extends Repository[Subsection] {}
+import scala.concurrent.Future
+
+trait SubsectionRepository extends Repository[Subsection] {
+  def getEntitiesForIds(ids: List[String]): Future[Seq[Subsection]]
+}
 
 object SubsectionRepository {
   def apply: SubsectionRepository = new SubsectionRepositoryImpl()

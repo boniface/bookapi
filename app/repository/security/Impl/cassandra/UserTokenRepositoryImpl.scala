@@ -5,7 +5,7 @@ import com.outworkers.phantom.database.Database
 import com.outworkers.phantom.dsl._
 import configuration.connections.DataConnection
 import domain.security.UserToken
-import repository.security.Impl.cassandra.tables.{UserTokenByIdTableImpl, UserTokenTableImpl}
+import repository.security.Impl.cassandra.tables.{UserTokenByIdTable, UserTokenTable}
 import repository.security.UserTokenRepository
 
 import scala.concurrent.Future
@@ -43,8 +43,8 @@ class UserTokenRepositoryImpl extends UserTokenRepository{
 }
 
 class UserTokenDatabase(override val connector: KeySpaceDef) extends Database[UserTokenDatabase](connector) {
-  object userTokenTable extends UserTokenTableImpl with connector.Connector
-  object userTokenByIdTable extends UserTokenByIdTableImpl with connector.Connector
+  object userTokenTable extends UserTokenTable with connector.Connector
+  object userTokenByIdTable extends UserTokenByIdTable with connector.Connector
 }
 
 object UserTokenDatabase extends UserTokenDatabase(DataConnection.connector)

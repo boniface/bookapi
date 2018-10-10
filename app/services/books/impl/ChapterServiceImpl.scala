@@ -18,6 +18,8 @@ class ChapterServiceImpl extends ChapterService{
 
   override def getEntities: Future[Seq[Chapter]] = ChapterRepository.apply.getEntities
 
+  override def getEntitiesForIds(ids: List[String]): Future[Seq[Chapter]] = ChapterRepository.apply.getEntitiesForIds(ids)
+
   override def getEntity(id: String): Future[Option[Chapter]] = ChapterRepository.apply.getEntity(id)
 
   override def deleteEntity(entity: Chapter): Future[Boolean] = ChapterRepository.apply.deleteEntity(entity)

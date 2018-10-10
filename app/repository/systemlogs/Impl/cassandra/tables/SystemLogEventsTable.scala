@@ -9,8 +9,9 @@ import domain.systemlogs.SystemLogEvents
 
 import scala.concurrent.Future
 
-abstract class SystemLogEventsTable extends Table[SystemLogEventsTable, SystemLogEvents] {
+abstract class SystemLogEventsTable extends Table[SystemLogEventsTable, SystemLogEvents] with RootConnector {
 
+  override lazy val tableName = "logevents"
 
   object siteId extends StringColumn with PartitionKey
 
@@ -23,12 +24,6 @@ abstract class SystemLogEventsTable extends Table[SystemLogEventsTable, SystemLo
   object message extends StringColumn
 
   object date extends Col[LocalDateTime]
-
-}
-
-abstract class SystemLogEventsTableImpl extends SystemLogEventsTable with RootConnector {
-
-  override lazy val tableName = "logevents"
 
   def saveEntity(entity: SystemLogEvents): Future[ResultSet] = {
     insert
@@ -60,8 +55,9 @@ abstract class SystemLogEventsTableImpl extends SystemLogEventsTable with RootCo
   }
 }
 
-abstract class SystemLogEventsByIdTable extends Table[SystemLogEventsByIdTable, SystemLogEvents] {
+abstract class SystemLogEventsByIdTable extends Table[SystemLogEventsByIdTable, SystemLogEvents] with RootConnector {
 
+  override lazy val tableName = "logeventsids"
 
   object siteId extends StringColumn with PrimaryKey
 
@@ -74,12 +70,6 @@ abstract class SystemLogEventsByIdTable extends Table[SystemLogEventsByIdTable, 
   object message extends StringColumn
 
   object date extends Col[LocalDateTime]
-
-}
-
-abstract class SystemLogEventsByIdTableImpl extends SystemLogEventsByIdTable with RootConnector {
-
-  override lazy val tableName = "logeventsids"
 
   def saveEntity(entity: SystemLogEvents): Future[ResultSet] = {
     insert

@@ -13,7 +13,7 @@ import com.outworkers.phantom.dsl._
 import configuration.connections.DataConnection
 import domain.books.Multimedia
 import repository.books.MultimediaRepository
-import repository.books.impl.cassandra.tables.MultimediaTableImpl
+import repository.books.impl.cassandra.tables.{MultimediaTable}
 
 import scala.concurrent.Future
 
@@ -42,7 +42,7 @@ class MultimediaRepositoryImpl extends MultimediaRepository {
 
 class MultimediaDatabase(override val connector: KeySpaceDef) extends Database[MultimediaDatabase] (connector) {
 
-  object MultimediaTable extends MultimediaTableImpl with connector.Connector
+  object MultimediaTable extends MultimediaTable with connector.Connector
 
 }
 

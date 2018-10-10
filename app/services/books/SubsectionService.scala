@@ -11,7 +11,11 @@ import domain.books.Subsection
 import services.CrudService
 import services.books.impl.SubsectionServiceImpl
 
+import scala.concurrent.Future
+
 trait SubsectionService extends CrudService[Subsection] {
+
+  def getEntitiesForIds(ids: List[String]): Future[Seq[Subsection]]
 
 }
 

@@ -12,7 +12,9 @@ import scala.concurrent.Future
 /**
   * @author caniksea
   */
-abstract class SiteTable extends Table[SiteTable, Site] {
+abstract class SiteTable extends Table[SiteTable, Site] with RootConnector {
+
+  override lazy val tableName = "sites"
 
   object siteId extends StringColumn with PartitionKey
 
@@ -21,15 +23,6 @@ abstract class SiteTable extends Table[SiteTable, Site] {
   object siteDescription extends OptionalStringColumn
 
   object dateCreated extends Col[LocalDateTime]
-
-}
-
-/**
-  * @author caniksea
-  */
-abstract class SiteTableImpl extends SiteTable with RootConnector {
-
-  override lazy val tableName = "sites"
 
   /**
     * Insert new site

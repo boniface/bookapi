@@ -11,8 +11,10 @@ import domain.books.Chapter
 import services.CrudService
 import services.books.impl.ChapterServiceImpl
 
-trait ChapterService extends CrudService[Chapter]{
+import scala.concurrent.Future
 
+trait ChapterService extends CrudService[Chapter]{
+  def getEntitiesForIds(ids: List[String]): Future[Seq[Chapter]]
 }
 
 object ChapterService {

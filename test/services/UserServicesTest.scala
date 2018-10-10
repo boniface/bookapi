@@ -26,15 +26,15 @@ class UserServicesTest extends FunSuite{
   test("readUser"){
     val result = Await.result(services.apply.getEntity(user.siteId), 2.minutes)
 
-    assert( result.get.siteId=="1001")
+    assert( result.get.userId=="15")
   }
 
   test("UserUpdate"){
     val result = Await.result(services.apply.getEntity(user.siteId), 2.minutes)
-    val updatedRole = result.get.copy(siteId= "1003")
-    val savedResult = Await.result(services.apply.saveEntity(user), 2.minutes)
-    val newRequest = Await.result(services.apply.getEntity(user.siteId), 2.minutes)
-    assert( newRequest.get.siteId=="1003")
+    val updatedUser= result.get.copy(userId = "16")
+    val savedResult = Await.result(services.apply.saveEntity(updatedUser), 2.minutes)
+    val newRequest = Await.result(services.apply.getEntity(updatedUser.userId), 2.minutes)
+    assert( newRequest.get.userId=="16")
   }
 
   test("readAllUser"){

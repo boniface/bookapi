@@ -11,7 +11,13 @@ import domain.books.Book
 import repository.Repository
 import repository.books.impl.cassandra.BookRepositoryImpl
 
-trait BookRepository extends Repository[Book]{}
+import scala.concurrent.Future
+
+trait BookRepository extends Repository[Book]{
+
+  def getSiteEntities(siteId: String): Future[Seq[Book]]
+
+}
 
 object BookRepository {
   def apply: BookRepository = new BookRepositoryImpl()

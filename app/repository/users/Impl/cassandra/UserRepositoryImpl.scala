@@ -5,7 +5,7 @@ import com.outworkers.phantom.database.Database
 import com.outworkers.phantom.dsl._
 import configuration.connections.DataConnection
 import domain.users.User
-import repository.users.Impl.cassandra.tables.{UserByEmailTableImpl, UserByIdTableImpl, UserTableImpl}
+import repository.users.Impl.cassandra.tables._
 import repository.users.UserRepository
 
 import scala.concurrent.Future
@@ -46,11 +46,11 @@ class UserRepositoryImpl extends UserRepository {
 
 class UserDatabase(override val connector: KeySpaceDef) extends Database[UserDatabase](connector) {
 
-  object userTable extends UserTableImpl with connector.Connector
+  object userTable extends UserTable with connector.Connector
 
-  object userByEmailTable extends UserByEmailTableImpl with connector.Connector
+  object userByEmailTable extends UserByEmailTable with connector.Connector
 
-  object userByIdTable extends UserByIdTableImpl with connector.Connector
+  object userByIdTable extends UserByIdTable with connector.Connector
 
 }
 

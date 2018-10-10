@@ -6,7 +6,7 @@ import com.outworkers.phantom.dsl._
 import configuration.connections.DataConnection
 import domain.security.ApiKeys
 import repository.security.ApiKeysRepository
-import repository.security.Impl.cassandra.tables.ApiKeysTableImpl
+import repository.security.Impl.cassandra.tables.{ApiKeysTable}
 
 import scala.concurrent.Future
 
@@ -39,7 +39,7 @@ class ApiKeysRepositoryImpl extends ApiKeysRepository {
 
 class ApiKeysDatabase(override val connector: KeySpaceDef) extends Database[ApiKeysDatabase](connector) {
 
-  object apiKeysTable extends ApiKeysTableImpl with connector.Connector
+  object apiKeysTable extends ApiKeysTable with connector.Connector
 
 }
 

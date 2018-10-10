@@ -7,13 +7,13 @@
 
 package repository.books.impl.cassandra
 
-import com.outworkers.phantom.connectors.{KeySpace}
+import com.outworkers.phantom.connectors.KeySpace
 import com.outworkers.phantom.database.Database
 import com.outworkers.phantom.dsl._
 import configuration.connections.DataConnection
 import domain.books.Chapter
 import repository.books.ChapterRepository
-import repository.books.impl.cassandra.tables.ChapterTableImpl
+import repository.books.impl.cassandra.tables.{ChapterTable}
 
 import scala.concurrent.Future
 
@@ -25,6 +25,8 @@ class ChapterRepositoryImpl extends ChapterRepository {
     ChapterDatabase.ChapterTable.getEntities
 
   override def getEntity(id: String): Future[Option[Chapter]] = ChapterDatabase.ChapterTable.getEntity(id)
+
+  override def getEntitiesForIds(ids: List[String]): Future[Seq[Chapter]] = ChapterDatabase.ChapterTable.getEntitiesForIds(ids)
 
   override def deleteEntity(entity: Chapter): Future[Boolean] =
     ChapterDatabase.ChapterTable.deleteEntity(entity.id).map(result => result.isExhausted())
@@ -40,7 +42,7 @@ class ChapterRepositoryImpl extends ChapterRepository {
 
 class ChapterDatabase(override val connector: KeySpaceDef) extends Database[ChapterDatabase](connector) {
 
-  object ChapterTable extends ChapterTableImpl with connector.Connector
+  object ChapterTable extends ChapterTable with connector.Connector
 
 }
 

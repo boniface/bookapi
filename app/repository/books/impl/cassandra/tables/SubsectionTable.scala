@@ -18,7 +18,9 @@ import domain.books.{Subsection}
 
 import scala.concurrent.Future
 
-abstract class SubsectionTable extends Table[SubsectionTable, Subsection] {
+abstract class SubsectionTable extends Table[SubsectionTable, Subsection] with RootConnector {
+
+  override lazy val tableName = "subsections"
 
   object id extends StringColumn with PartitionKey
 
@@ -31,11 +33,6 @@ abstract class SubsectionTable extends Table[SubsectionTable, Subsection] {
   object multimedias extends ListColumn[String]
 
   object dateCreated extends Col[LocalDateTime]
-
-}
-
-abstract class SubsectionTableImpl extends SubsectionTable with RootConnector {
-  override lazy val tableName = "subsections"
 
   /**
     * Save a subsection
@@ -81,5 +78,15 @@ abstract class SubsectionTableImpl extends SubsectionTable with RootConnector {
     select
       .where(_.id.eqs(id))
       .one()
+  }
+
+  /**
+    * Fetch subsections given IDs
+    * @param ids
+    * @return
+    */
+  def getEntitiesForIds(ids: List[String]): Future[Seq[Subsection]] = {
+    select
+      .where(_.id in ids).fetchEnumerator() run Iteratee.collect()
   }
 }

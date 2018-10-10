@@ -18,6 +18,8 @@ class SectionServiceImpl extends SectionService{
 
   override def getEntities: Future[Seq[Section]] = SectionRepository.apply.getEntities
 
+  override def getEntitiesForIds(ids: List[String]): Future[Seq[Section]] = SectionRepository.apply.getEntitiesForIds(ids)
+
   override def getEntity(id: String): Future[Option[Section]] = SectionRepository.apply.getEntity(id)
 
   override def deleteEntity(entity: Section): Future[Boolean] = SectionRepository.apply.deleteEntity(entity)

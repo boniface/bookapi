@@ -11,7 +11,11 @@ import domain.books.Chapter
 import repository.Repository
 import repository.books.impl.cassandra.ChapterRepositoryImpl
 
-trait ChapterRepository extends Repository[Chapter] {}
+import scala.concurrent.Future
+
+trait ChapterRepository extends Repository[Chapter] {
+  def getEntitiesForIds(ids: List[String]): Future[Seq[Chapter]]
+}
 
 object ChapterRepository {
   def apply: ChapterRepository = new ChapterRepositoryImpl()

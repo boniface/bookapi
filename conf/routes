@@ -15,5 +15,5 @@ GET        /assets/*file        controllers.Assets.versioned(path="/public", fil
 ->         /security            controllers.security.SecurityRouter
 ->         /syslogs             controllers.systemlogs.LogsRouter
 ->         /users               controllers.users.UsersRouter
-
-
+->         /sites               controllers.sites.SiteRouter
+->         /books               controllers.books.BookApiRouter

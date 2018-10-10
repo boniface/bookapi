@@ -1,12 +1,12 @@
 package repository.sites.impl.cassandra
 
-import com.outworkers.phantom.connectors.{KeySpace}
+import com.outworkers.phantom.connectors.KeySpace
 import com.outworkers.phantom.database.Database
 import configuration.connections.DataConnection
 import com.outworkers.phantom.dsl._
 import domain.sites.Site
 import repository.sites.SiteRepository
-import repository.sites.impl.cassandra.tables.SiteTableImpl
+import repository.sites.impl.cassandra.tables.{SiteTable}
 
 import scala.concurrent.Future
 
@@ -34,6 +34,6 @@ class SiteRepositoryImpl extends SiteRepository {
 
 class SiteDatabase(override val connector: KeySpaceDef) extends Database[SiteDatabase](connector) {
 
-  object SiteTable extends SiteTableImpl with connector.Connector
+  object SiteTable extends SiteTable with connector.Connector
 }
 object SiteDatabase extends SiteDatabase(DataConnection.connector)

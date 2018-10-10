@@ -18,7 +18,9 @@ import domain.books.Chapter
 
 import scala.concurrent.Future
 
-abstract class ChapterTable extends Table[ChapterTable, Chapter] {
+abstract class ChapterTable extends Table[ChapterTable, Chapter] with RootConnector {
+
+  override lazy val tableName = "chapters"
 
   object id extends StringColumn with PartitionKey
 
@@ -33,12 +35,6 @@ abstract class ChapterTable extends Table[ChapterTable, Chapter] {
   object multimedias extends ListColumn[String]
 
   object dateCreated extends Col[LocalDateTime]
-
-}
-
-abstract class ChapterTableImpl extends ChapterTable with RootConnector {
-
-  override lazy val tableName = "chapters"
 
   /**
     * Save a chapter
@@ -85,6 +81,16 @@ abstract class ChapterTableImpl extends ChapterTable with RootConnector {
     select
       .where(_.id.eqs(id))
       .one()
+  }
+
+  /**
+    * Fetch a list of chapters given IDs
+    * @param ids
+    * @return
+    */
+  def getEntitiesForIds(ids: List[String]): Future[Seq[Chapter]] = {
+    select
+      .where(_.id in ids).fetchEnumerator() run Iteratee.collect()
   }
 
 }

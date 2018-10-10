@@ -5,7 +5,7 @@ import com.outworkers.phantom.database.Database
 import com.outworkers.phantom.dsl._
 import configuration.connections.DataConnection
 import domain.mail.MailApi
-import repository.mail.Impl.cassandra.tables.MailApiTableImpl
+import repository.mail.Impl.cassandra.tables.{MailApiTable}
 import repository.mail.MailApiRepository
 
 import scala.concurrent.Future
@@ -36,7 +36,7 @@ class MailApiRepositoryImpl extends MailApiRepository{
 }
 
 class MailApiDatabase(override val connector: KeySpaceDef) extends Database[MailApiDatabase](connector) {
-  object mailApiTable extends MailApiTableImpl with connector.Connector
+  object mailApiTable extends MailApiTable with connector.Connector
 
 }
 

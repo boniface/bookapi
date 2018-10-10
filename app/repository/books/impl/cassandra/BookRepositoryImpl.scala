@@ -13,7 +13,7 @@ import com.outworkers.phantom.dsl._
 import configuration.connections.DataConnection
 import domain.books.Book
 import repository.books.BookRepository
-import repository.books.impl.cassandra.tables.{BookByIdTableImpl, BookTableImpl}
+import repository.books.impl.cassandra.tables.{BookByIdTable, BookTable}
 
 import scala.concurrent.Future
 
@@ -25,6 +25,8 @@ class BookRepositoryImpl extends BookRepository {
     BookDatabase.BookTable.saveEntity(entity).map(result => result.isExhausted())
     BookDatabase.BookByIdTable.saveEntity(entity).map(result => result.isExhausted())
   }
+
+  override def getSiteEntities(siteId: String): Future[Seq[Book]] = BookDatabase.BookTable.retrieveSiteBooks(siteId)
 
   override def getEntities: Future[Seq[Book]] = BookDatabase.BookTable.getEntities
 
@@ -51,9 +53,9 @@ class BookRepositoryImpl extends BookRepository {
   */
 class BookDatabase(override val connector: KeySpaceDef) extends Database[BookDatabase](connector) {
 
-  object BookTable extends BookTableImpl with connector.Connector
+  object BookTable extends BookTable with connector.Connector
 
-  object BookByIdTable extends BookByIdTableImpl with connector.Connector
+  object BookByIdTable extends BookByIdTable with connector.Connector
 
 }
 

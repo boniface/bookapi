@@ -16,7 +16,9 @@ import domain.books.Multimedia
 
 import scala.concurrent.Future
 
-abstract class MultimediaTable extends Table[MultimediaTable, Multimedia] {
+abstract class MultimediaTable extends Table[MultimediaTable, Multimedia] with RootConnector {
+
+  override lazy val tableName = "multimedia"
 
   object multimediaId extends StringColumn with PartitionKey
 
@@ -27,12 +29,6 @@ abstract class MultimediaTable extends Table[MultimediaTable, Multimedia] {
   object multimediaLink extends StringColumn
 
   object dateCreated extends Col[LocalDateTime]
-
-}
-
-abstract class MultimediaTableImpl extends MultimediaTable with RootConnector {
-
-  override lazy val tableName = "multimedia"
 
   /**
     * Save a multimedia

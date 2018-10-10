@@ -9,7 +9,9 @@ import domain.security.ApiKeys
 
 import scala.concurrent.Future
 
-abstract class ApiKeysTable extends Table[ApiKeysTable, ApiKeys] {
+abstract class ApiKeysTable extends Table[ApiKeysTable, ApiKeys] with RootConnector {
+
+  override lazy val tableName = "apikeys"
 
   object id extends StringColumn with PartitionKey
 
@@ -18,12 +20,6 @@ abstract class ApiKeysTable extends Table[ApiKeysTable, ApiKeys] {
   object status extends StringColumn
 
   object date extends Col[LocalDateTime]
-
-}
-
-abstract class ApiKeysTableImpl extends ApiKeysTable with RootConnector {
-
-  override lazy val tableName = "apikeys"
 
   def saveEntity(entity: ApiKeys): Future[ResultSet] = {
     insert

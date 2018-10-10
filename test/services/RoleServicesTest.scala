@@ -21,13 +21,14 @@ class RoleServicesTest extends FunSuite{
     val result = Await.result(services.apply.getEntity(role.id), 2.minutes)
 
     assert( result.get.roleName=="ADMIN")
+
   }
 
   test("roleUpdate"){
     val result = Await.result(services.apply.getEntity(role.id), 2.minutes)
     val updatedRole = result.get.copy(roleName = "NORMALUSER")
-    val savedResult = Await.result(services.apply.saveEntity(role), 2.minutes)
-    val newRequest = Await.result(services.apply.getEntity(role.id), 2.minutes)
+    val savedResult = Await.result(services.apply.saveEntity(updatedRole), 2.minutes)
+    val newRequest = Await.result(services.apply.getEntity(updatedRole.id), 2.minutes)
     assert( newRequest.get.roleName=="NORMALUSER")
   }
 

@@ -17,7 +17,9 @@ import domain.books.{Book}
 import scala.concurrent.Future
 
 
-abstract class BookTable extends Table[BookTable, Book] {
+abstract class BookTable extends Table[BookTable, Book] with RootConnector  {
+
+  override lazy val tableName = "books"
 
   object siteId extends StringColumn with PartitionKey
 
@@ -44,11 +46,6 @@ abstract class BookTable extends Table[BookTable, Book] {
   object multimedias extends ListColumn[String]
 
   object dateCreated extends Col[LocalDateTime]
-
-}
-
-abstract class BookTableImpl extends BookTable with RootConnector {
-  override lazy val tableName = "books"
 
   /**
     * Insert new book
@@ -121,7 +118,9 @@ abstract class BookTableImpl extends BookTable with RootConnector {
 
 }
 
-abstract class BookByIdTable extends Table[BookByIdTable, Book] {
+abstract class BookByIdTable extends Table[BookByIdTable, Book] with RootConnector {
+
+  override lazy val tableName = "booksbyids"
 
   object siteId extends StringColumn with PrimaryKey
 
@@ -148,10 +147,6 @@ abstract class BookByIdTable extends Table[BookByIdTable, Book] {
   object multimedias extends ListColumn[String]
 
   object dateCreated extends Col[LocalDateTime]
-}
-
-abstract class BookByIdTableImpl extends BookByIdTable with RootConnector {
-  override lazy val tableName = "booksbyids"
 
   /**
     * Insert a new book

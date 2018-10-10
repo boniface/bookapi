@@ -28,20 +28,20 @@ class UserRoleServicesTest extends FunSuite{
     assert( result.get.userId=="12")
   }
 
-  test("ApiKeysUpdate"){
+  test("UserRoleUpdate"){
     val result = Await.result(services.apply.getEntity(userRole.userId), 2.minutes)
-    val updatedRole = result.get.copy(userId= "13")
-    val savedResult = Await.result(services.apply.saveEntity(userRole), 2.minutes)
-    val newRequest = Await.result(services.apply.getEntity(userRole.userId), 2.minutes)
+    val updatedUserRole = result.get.copy(userId= "13")
+    val savedResult = Await.result(services.apply.saveEntity(updatedUserRole), 2.minutes)
+    val newRequest = Await.result(services.apply.getEntity(updatedUserRole.userId), 2.minutes)
     assert( newRequest.get.userId=="13")
   }
 
-  test("readAllApiKeys"){
+  test("readAllUserRole"){
     val result = Await.result(services.apply.getEntities, 2.minutes)
     assert(result.size>0)
   }
 
-  test("deleteApiKeys"){
+  test("deleteUserRole"){
     val result = Await.result(services.apply.deleteEntity(userRole), 2.minutes)
     assert(result)
   }

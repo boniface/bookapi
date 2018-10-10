@@ -5,7 +5,7 @@ import com.outworkers.phantom.database.Database
 import com.outworkers.phantom.dsl._
 import configuration.connections.DataConnection
 import domain.users.UserRole
-import repository.users.Impl.cassandra.tables.UserRoleTableImpl
+import repository.users.Impl.cassandra.tables.{UserRoleTable}
 import repository.users.UserRoleRepository
 
 import scala.concurrent.Future
@@ -39,7 +39,7 @@ class UserRoleRepositoryImpl extends UserRoleRepository {
 
 class UserRoleDatabase(override val connector: KeySpaceDef) extends Database[UserRoleDatabase](connector) {
 
-  object userRoleTable extends UserRoleTableImpl with connector.Connector
+  object userRoleTable extends UserRoleTable with connector.Connector
 }
 
 object UserRoleDatabase extends UserRoleDatabase(DataConnection.connector)

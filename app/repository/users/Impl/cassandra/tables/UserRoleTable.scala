@@ -9,20 +9,15 @@ import domain.users.UserRole
 
 import scala.concurrent.Future
 
-abstract class UserRoleTable extends Table[UserRoleTable, UserRole] {
+abstract class UserRoleTable extends Table[UserRoleTable, UserRole] with RootConnector {
+
+  override lazy val tableName = "userroles"
 
   object userId extends StringColumn with PartitionKey
 
   object date extends Col[LocalDateTime]
 
   object roleId extends StringColumn
-
-}
-
-abstract class UserRoleTableImpl extends UserRoleTable with RootConnector {
-
-
-  override lazy val tableName = "userroles"
 
   def saveEntity(entity: UserRole): Future[ResultSet] = {
     insert

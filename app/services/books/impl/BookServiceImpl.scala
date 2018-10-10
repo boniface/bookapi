@@ -16,6 +16,8 @@ import scala.concurrent.Future
 class BookServiceImpl extends BookService{
   override def saveEntity(entity: Book): Future[Boolean] = BookRepository.apply.saveEntity(entity)
 
+  override def getSiteEntities(siteId: String): Future[Seq[Book]] = BookRepository.apply.getSiteEntities(siteId)
+
   override def getEntities: Future[Seq[Book]] = BookRepository.apply.getEntities
 
   override def getEntity(id: String): Future[Option[Book]] = BookRepository.apply.getEntity(id)

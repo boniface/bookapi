@@ -6,19 +6,15 @@ import domain.mail.MailApi
 
 import scala.concurrent.Future
 
-abstract class MailApiTable extends Table[MailApiTable, MailApi] {
+abstract class MailApiTable extends Table[MailApiTable, MailApi] with RootConnector {
+
+  override lazy val tableName = "mailapis"
 
   object id extends StringColumn with PartitionKey
 
   object key extends StringColumn
 
   object sender extends StringColumn
-
-}
-
-abstract class MailApiTableImpl extends MailApiTable with RootConnector {
-
-  override lazy val tableName = "mailapis"
 
   def saveEntity(entity: MailApi): Future[ResultSet] = {
     insert

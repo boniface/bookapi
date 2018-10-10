@@ -33,8 +33,8 @@ class securityServicesTest extends FunSuite{
 
   test("ApiKeysUpdate"){
     val result = Await.result(services.apply.getEntity(apiKeys.id), 2.minutes)
-    val updatedRole = result.get.copy(value= "2001")
-    val savedResult = Await.result(services.apply.saveEntity(apiKeys), 2.minutes)
+    val updatedApiKeys = result.get.copy(value= "2001")
+    val savedResult = Await.result(services.apply.saveEntity(updatedApiKeys), 2.minutes)
     val newRequest = Await.result(services.apply.getEntity(apiKeys.id), 2.minutes)
     assert( newRequest.get.value=="2001")
   }

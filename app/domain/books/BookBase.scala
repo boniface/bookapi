@@ -10,10 +10,10 @@ package domain.books
 import java.time.{LocalDateTime}
 
 abstract class BookBase {
-  def id: String
-  def title: String
-  def description: Option[String] = None
-  def story: Option[String] = None
-  def multimedias: List[String] = List[String]()
-  def dateCreated: LocalDateTime = LocalDateTime.now
+  val id: String
+  val title: String
+  val description: Option[String] = None
+  val story: Option[String] = None
+  val multimedias: List[String] = List[String]()
+  val dateCreated: LocalDateTime = LocalDateTime.now
 }

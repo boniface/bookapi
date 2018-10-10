@@ -9,7 +9,9 @@ import domain.security.UserToken
 
 import scala.concurrent.Future
 
-abstract class UserTokenTable extends Table[UserTokenTable, UserToken] {
+abstract class UserTokenTable extends Table[UserTokenTable, UserToken] with RootConnector {
+
+  override lazy val tableName = "usertokens"
 
   object userId extends StringColumn with PartitionKey
 
@@ -20,13 +22,6 @@ abstract class UserTokenTable extends Table[UserTokenTable, UserToken] {
   object tokenValue extends StringColumn
 
   object message extends StringColumn
-
-
-}
-
-abstract class UserTokenTableImpl extends UserTokenTable with RootConnector {
-
-  override lazy val tableName = "usertokens"
 
   def saveEntity(entity: UserToken): Future[ResultSet] = {
     insert
@@ -53,25 +48,27 @@ abstract class UserTokenTableImpl extends UserTokenTable with RootConnector {
   }
 }
 
-abstract class UserTokenByUsersTable extends Table[UserTokenByUsersTable, UserToken] {
+//abstract class UserTokenByUsersTable extends Table[UserTokenByUsersTable, UserToken] {
+//
+//  object siteId extends StringColumn with PrimaryKey
+//
+//  object userId extends StringColumn with PartitionKey
+//
+//  object id extends StringColumn with PrimaryKey
+//
+//  object expiryDate extends Col[LocalDateTime]
+//
+//  object tokenValue extends StringColumn
+//
+//  object message extends StringColumn
+//
+//
+//}
 
-  object siteId extends StringColumn with PrimaryKey
 
-  object userId extends StringColumn with PartitionKey
+abstract class UserTokenByIdTable extends Table[UserTokenByIdTable, UserToken] with RootConnector {
 
-  object id extends StringColumn with PrimaryKey
-
-  object expiryDate extends Col[LocalDateTime]
-
-  object tokenValue extends StringColumn
-
-  object message extends StringColumn
-
-
-}
-
-
-abstract class UserTokenByIdTable extends Table[UserTokenByIdTable, UserToken] {
+  override lazy val tableName = "usertokensids"
 
   object userId extends StringColumn with PrimaryKey
 
@@ -82,11 +79,6 @@ abstract class UserTokenByIdTable extends Table[UserTokenByIdTable, UserToken] {
   object tokenValue extends StringColumn
 
   object message extends StringColumn
-}
-
-abstract class UserTokenByIdTableImpl extends UserTokenByIdTable with RootConnector {
-
-  override lazy val tableName = "usertokensids"
 
   def saveEntity(entity: UserToken): Future[ResultSet] = {
     insert

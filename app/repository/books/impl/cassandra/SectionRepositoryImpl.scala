@@ -7,13 +7,13 @@
 
 package repository.books.impl.cassandra
 
-import com.outworkers.phantom.connectors.{KeySpace}
+import com.outworkers.phantom.connectors.KeySpace
 import com.outworkers.phantom.database.Database
 import com.outworkers.phantom.dsl._
 import configuration.connections.DataConnection
 import domain.books.Section
 import repository.books.SectionRepository
-import repository.books.impl.cassandra.tables.SectionTableImpl
+import repository.books.impl.cassandra.tables.{SectionTable}
 
 import scala.concurrent.Future
 
@@ -23,6 +23,9 @@ class SectionRepositoryImpl extends SectionRepository {
 
   override def getEntities: Future[Seq[Section]] =
     SectionDatabase.SectionTable.getEntities
+
+  override def getEntitiesForIds(ids: List[String]): Future[Seq[Section]] =
+    SectionDatabase.SectionTable.getEntitiesForIds(ids)
 
   override def getEntity(id: String): Future[Option[Section]] = SectionDatabase.SectionTable.getEntity(id)
 
@@ -41,7 +44,7 @@ class SectionRepositoryImpl extends SectionRepository {
 
 class SectionDatabase(override val connector: KeySpaceDef) extends Database[SectionDatabase](connector){
 
-  object SectionTable extends SectionTableImpl with connector.Connector
+  object SectionTable extends SectionTable with connector.Connector
 
 }
 

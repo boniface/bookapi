@@ -11,7 +11,11 @@ import domain.books.Section
 import repository.Repository
 import repository.books.impl.cassandra.SectionRepositoryImpl
 
+import scala.concurrent.Future
+
 trait SectionRepository extends Repository[Section] {
+
+  def getEntitiesForIds(ids: List[String]): Future[Seq[Section]]
 
 }
 

@@ -5,7 +5,7 @@ import com.outworkers.phantom.database.Database
 import com.outworkers.phantom.dsl._
 import configuration.connections.DataConnection
 import domain.systemlogs.SystemLogEvents
-import repository.systemlogs.Impl.cassandra.tables.{SystemLogEventsByIdTableImpl, SystemLogEventsTableImpl}
+import repository.systemlogs.Impl.cassandra.tables.{SystemLogEventsByIdTable, SystemLogEventsTable}
 import repository.systemlogs.SystemLogEventsRepository
 
 import scala.concurrent.Future
@@ -46,8 +46,8 @@ class SystemLogEventsRepositoryImpl extends SystemLogEventsRepository {
 
 class SystemLogEventsDatabase(override val connector: KeySpaceDef) extends Database[SystemLogEventsDatabase](connector) {
 
-  object systemLogEventsTable extends SystemLogEventsTableImpl with connector.Connector
-  object systemLogEventsByIdTable extends SystemLogEventsByIdTableImpl with connector.Connector
+  object systemLogEventsTable extends SystemLogEventsTable with connector.Connector
+  object systemLogEventsByIdTable extends SystemLogEventsByIdTable with connector.Connector
 }
 
 object SystemLogEventsDatabase extends SystemLogEventsDatabase(DataConnection.connector)
