@@ -23,27 +23,23 @@ abstract class BookTable extends Table[BookTable, Book] with RootConnector  {
 
   object siteId extends StringColumn with PartitionKey
 
-  object id extends StringColumn with PrimaryKey
+  object bookId extends StringColumn with PrimaryKey
 
-  object title extends StringColumn
+  object bookTitle extends StringColumn
 
-  object isbn extends StringColumn
+  object bookDescription extends OptionalStringColumn
 
-  object eisbn extends StringColumn
+  object story extends OptionalStringColumn
+
+  object isbn extends OptionalStringColumn
+
+  object eisbn extends OptionalStringColumn
 
   object author extends StringColumn
 
   object publisher extends StringColumn
 
-  object description extends OptionalStringColumn
-
-  object story extends OptionalStringColumn
-
   object datePublished extends Col[LocalDateTime]
-
-  object chapterIds extends ListColumn[String]
-
-  object multimedias extends ListColumn[String]
 
   object dateCreated extends Col[LocalDateTime]
 
@@ -54,18 +50,16 @@ abstract class BookTable extends Table[BookTable, Book] with RootConnector  {
     */
   def saveEntity(entity: Book): Future[ResultSet] = {
     insert
-      .value(_.id, entity.id)
       .value(_.siteId, entity.siteId)
-      .value(_.title, entity.title)
+      .value(_.bookId, entity.bookId)
+      .value(_.bookTitle, entity.bookTitle)
+      .value(_.bookDescription, entity.bookDescription)
+      .value(_.story, entity.story)
       .value(_.isbn, entity.isbn)
       .value(_.eisbn, entity.eisbn)
       .value(_.author, entity.author)
       .value(_.publisher, entity.publisher)
-      .value(_.description, entity.description)
-      .value(_.story, entity.story)
       .value(_.datePublished, entity.datePublished)
-      .value(_.chapterIds, entity.chapterIds)
-      .value(_.multimedias, entity.multimedias)
       .value(_.dateCreated, entity.dateCreated)
       .future()
   }
@@ -75,7 +69,7 @@ abstract class BookTable extends Table[BookTable, Book] with RootConnector  {
     * @param siteId
     * @return
     */
-  def retrieveSiteBooks(siteId: String): Future[Seq[Book]] = {
+  def getSiteEntities(siteId: String): Future[Seq[Book]] = {
     select
       .where(_.siteId eqs siteId)
       .fetchEnumerator() run Iteratee.collect()
@@ -84,14 +78,14 @@ abstract class BookTable extends Table[BookTable, Book] with RootConnector  {
   /**
     * Retrieve a book from site
     * @param siteId
-    * @param id
+    * @param bookId
     * @return
     */
-  def isBookAvailable(siteId: String, id: String): Future[Seq[Book]] = {
+  def isBookAvailable(siteId: String, bookId: String): Future[Option[Book]] = {
     select
       .where(_.siteId eqs siteId)
-      .and(_.id eqs id)
-      .fetchEnumerator() run Iteratee.collect()
+      .and(_.bookId eqs bookId)
+      .one()
   }
 
   /**
@@ -103,16 +97,27 @@ abstract class BookTable extends Table[BookTable, Book] with RootConnector  {
   }
 
   /**
-    * Delete a book from a site
+    *
     * @param siteId
-    * @param id
+    * @param bookId
     * @return
     */
-  def deleteEntity(siteId: String, id: String): Future[ResultSet] = {
+  def deleteEntity(siteId: String, bookId: String): Future[ResultSet] = {
     delete
       .where(_.siteId eqs siteId)
-      .and(_.id eqs id)
+      .and(_.bookId eqs bookId)
       .future()
+  }
+
+  /**
+    *
+    * @param siteId
+    * @return
+    */
+  def getBookCountForSite(siteId: String): Future[Option[Long]] = {
+    select
+      .count().where(_.siteId eqs siteId)
+      .one()
   }
 
 
@@ -120,31 +125,27 @@ abstract class BookTable extends Table[BookTable, Book] with RootConnector  {
 
 abstract class BookByIdTable extends Table[BookByIdTable, Book] with RootConnector {
 
-  override lazy val tableName = "booksbyids"
+  override lazy val tableName = "booksbyid"
 
   object siteId extends StringColumn with PrimaryKey
 
-  object id extends StringColumn with PartitionKey
+  object bookId extends StringColumn with PartitionKey
 
-  object title extends StringColumn
+  object bookTitle extends StringColumn
 
-  object isbn extends StringColumn
+  object bookDescription extends OptionalStringColumn
 
-  object eisbn extends StringColumn
+  object story extends OptionalStringColumn
+
+  object isbn extends OptionalStringColumn
+
+  object eisbn extends OptionalStringColumn
 
   object author extends StringColumn
 
   object publisher extends StringColumn
 
-  object description extends OptionalStringColumn
-
-  object story extends OptionalStringColumn
-
   object datePublished extends Col[LocalDateTime]
-
-  object chapterIds extends ListColumn[String]
-
-  object multimedias extends ListColumn[String]
 
   object dateCreated extends Col[LocalDateTime]
 
@@ -155,41 +156,39 @@ abstract class BookByIdTable extends Table[BookByIdTable, Book] with RootConnect
     */
   def saveEntity(entity: Book): Future[ResultSet] = {
     insert
-      .value(_.id, entity.id)
       .value(_.siteId, entity.siteId)
-      .value(_.title, entity.title)
+      .value(_.bookId, entity.bookId)
+      .value(_.bookTitle, entity.bookTitle)
+      .value(_.bookDescription, entity.bookDescription)
+      .value(_.story, entity.story)
       .value(_.isbn, entity.isbn)
       .value(_.eisbn, entity.eisbn)
       .value(_.author, entity.author)
       .value(_.publisher, entity.publisher)
-      .value(_.description, entity.description)
-      .value(_.story, entity.story)
       .value(_.datePublished, entity.datePublished)
-      .value(_.chapterIds, entity.chapterIds)
-      .value(_.multimedias, entity.multimedias)
       .value(_.dateCreated, entity.dateCreated)
       .future()
   }
 
   /**
     * Get a book
-    * @param id
+    * @param bookId
     * @return
     */
-  def getEntity(id: String): Future[Option[Book]] = {
+  def getEntity(bookId: String): Future[Option[Book]] = {
     select
-      .where(_.id eqs id)
+      .where(_.bookId eqs bookId)
       .one()
   }
 
   /**
     * Delete a book
-    * @param id
+    * @param bookId
     * @return
     */
-  def deleteEntity(id: String): Future[ResultSet] = {
+  def deleteEntity(bookId: String): Future[ResultSet] = {
     delete
-      .where(_.id eqs id)
+      .where(_.bookId eqs bookId)
       .future()
   }
 }

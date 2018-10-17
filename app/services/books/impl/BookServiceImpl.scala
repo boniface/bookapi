@@ -22,6 +22,8 @@ class BookServiceImpl extends BookService{
 
   override def getEntity(id: String): Future[Option[Book]] = BookRepository.apply.getEntity(id)
 
+  override def getBookCountForSite(siteId: String): Future[Option[Long]] = BookRepository.apply.getBookCountForSite(siteId)
+
   override def deleteEntity(entity: Book): Future[Boolean] = BookRepository.apply.deleteEntity(entity)
 
   override def createTable: Future[Boolean] = BookRepository.apply.createTable

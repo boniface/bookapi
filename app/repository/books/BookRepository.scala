@@ -17,6 +17,8 @@ trait BookRepository extends Repository[Book]{
 
   def getSiteEntities(siteId: String): Future[Seq[Book]]
 
+  def getBookCountForSite(siteId: String): Future[Option[Long]]
+
 }
 
 object BookRepository {

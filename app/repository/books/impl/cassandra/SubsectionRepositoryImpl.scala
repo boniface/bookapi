@@ -13,25 +13,30 @@ import com.outworkers.phantom.dsl._
 import configuration.connections.DataConnection
 import domain.books.Subsection
 import repository.books.SubsectionRepository
-import repository.books.impl.cassandra.tables.{SubsectionTable}
+import repository.books.impl.cassandra.tables.{SubsectionByIdTable, SubsectionTable}
 
 import scala.concurrent.Future
 
 class SubsectionRepositoryImpl extends SubsectionRepository{
-  override def saveEntity(entity: Subsection): Future[Boolean] =
+
+  override def saveEntity(entity: Subsection): Future[Boolean] = {
     SubsectionDatabase.SubsectionTable.saveEntity(entity).map(result => result.isExhausted())
+    SubsectionDatabase.SubsectionByIdTable.saveEntity(entity).map(result => result.isExhausted())
+  }
 
   override def getEntities: Future[Seq[Subsection]] =
     SubsectionDatabase.SubsectionTable.getEntities
 
-  override def getEntitiesForIds(ids: List[String]): Future[Seq[Subsection]] =
-    SubsectionDatabase.SubsectionTable.getEntitiesForIds(ids)
+  override def getSectionSubsections(sectionId: String): Future[Seq[Subsection]] =
+    SubsectionDatabase.SubsectionTable.getSectionSubsections(sectionId)
 
-  override def getEntity(id: String): Future[Option[Subsection]] =
-    SubsectionDatabase.SubsectionTable.getEntity(id)
+  override def getEntity(subsectionId: String): Future[Option[Subsection]] =
+    SubsectionDatabase.SubsectionByIdTable.getEntity(subsectionId)
 
-  override def deleteEntity(entity: Subsection): Future[Boolean] =
-    SubsectionDatabase.SubsectionTable.deleteEntity(entity.id).map(result => result.isExhausted())
+  override def deleteEntity(entity: Subsection): Future[Boolean] = {
+    SubsectionDatabase.SubsectionTable.deleteEntity(entity.sectionId, entity.subsectionId).map(result => result.isExhausted())
+    SubsectionDatabase.SubsectionByIdTable.deleteEntity(entity.subsectionId).map(result => result.isExhausted())
+  }
 
   override def createTable: Future[Boolean] = {
 
@@ -40,12 +45,14 @@ class SubsectionRepositoryImpl extends SubsectionRepository{
     implicit def session: Session = DataConnection.connector.session
 
     SubsectionDatabase.SubsectionTable.create.ifNotExists().future().map(result => result.head.isExhausted())
+    SubsectionDatabase.SubsectionByIdTable.create.ifNotExists().future().map(result => result.head.isExhausted())
   }
 }
 
 class SubsectionDatabase(override val connector: KeySpaceDef) extends Database[SubsectionDatabase](connector) {
 
   object SubsectionTable extends SubsectionTable with connector.Connector
+  object SubsectionByIdTable extends SubsectionByIdTable with connector.Connector
 
 }
 

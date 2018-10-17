@@ -15,7 +15,7 @@ import scala.concurrent.Future
 
 trait SectionRepository extends Repository[Section] {
 
-  def getEntitiesForIds(ids: List[String]): Future[Seq[Section]]
+  def getChapterSections(chapterId: String): Future[Seq[Section]]
 
 }
 

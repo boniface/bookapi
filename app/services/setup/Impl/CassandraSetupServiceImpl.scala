@@ -2,6 +2,7 @@ package services.setup.Impl
 
 import services.books._
 import services.mail.MailApiService
+import services.multimedia.MultimediaService
 import services.roles.RoleService
 import services.security.{ApiKeysService, UserTokenService}
 import services.setup.CassandraSetupService

@@ -13,24 +13,29 @@ import com.outworkers.phantom.dsl._
 import configuration.connections.DataConnection
 import domain.books.Section
 import repository.books.SectionRepository
-import repository.books.impl.cassandra.tables.{SectionTable}
+import repository.books.impl.cassandra.tables.{SectionByIdTable, SectionTable}
 
 import scala.concurrent.Future
 
 class SectionRepositoryImpl extends SectionRepository {
-  override def saveEntity(entity: Section): Future[Boolean] =
+  override def saveEntity(entity: Section): Future[Boolean] = {
     SectionDatabase.SectionTable.saveEntity(entity).map(result => result.isExhausted())
+    SectionDatabase.SectionByIdTable.saveEntity(entity).map(result => result.isExhausted())
+  }
 
   override def getEntities: Future[Seq[Section]] =
     SectionDatabase.SectionTable.getEntities
 
-  override def getEntitiesForIds(ids: List[String]): Future[Seq[Section]] =
-    SectionDatabase.SectionTable.getEntitiesForIds(ids)
+  override def getChapterSections(chapterId: String): Future[Seq[Section]] =
+    SectionDatabase.SectionTable.getChapterSections(chapterId)
 
-  override def getEntity(id: String): Future[Option[Section]] = SectionDatabase.SectionTable.getEntity(id)
+  override def getEntity(sectionId: String): Future[Option[Section]] =
+    SectionDatabase.SectionByIdTable.getEntity(sectionId)
 
-  override def deleteEntity(entity: Section): Future[Boolean] =
-    SectionDatabase.SectionTable.deleteEntity(entity.id).map(result => result.isExhausted())
+  override def deleteEntity(entity: Section): Future[Boolean] = {
+    SectionDatabase.SectionTable.deleteEntity(entity.chapterId, entity.sectionId).map(result => result.isExhausted())
+    SectionDatabase.SectionByIdTable.deleteEntity(entity.sectionId).map(result => result.isExhausted())
+  }
 
   override def createTable: Future[Boolean] = {
 
@@ -39,12 +44,15 @@ class SectionRepositoryImpl extends SectionRepository {
     implicit def session: Session = DataConnection.connector.session
 
     SectionDatabase.SectionTable.create.ifNotExists().future().map(result => result.head.isExhausted())
+    SectionDatabase.SectionByIdTable.create.ifNotExists().future().map(result => result.head.isExhausted())
   }
 }
 
 class SectionDatabase(override val connector: KeySpaceDef) extends Database[SectionDatabase](connector){
 
   object SectionTable extends SectionTable with connector.Connector
+
+  object SectionByIdTable extends SectionByIdTable with connector.Connector
 
 }
 

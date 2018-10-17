@@ -2,9 +2,9 @@ package repository
 
 import java.time.LocalDateTime
 
-import domain.books.Multimedia
+import domain.multimedia.Multimedia
 import org.scalatest.FunSuite
-import repository.books.MultimediaRepository
+import repository.multimedia.MultimediaRepository
 
 import scala.concurrent.Await
 import scala.concurrent.duration._

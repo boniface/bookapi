@@ -60,13 +60,12 @@ class ChapterController @Inject()(cc: ControllerComponents) extends AbstractCont
         }
   }
 
-  def getEntitiesForIds(ids: String): Action[AnyContent] = Action.async {
-    val idList = ids.split(",").map(_.trim).filter(!_.isEmpty).toList
+  def getBookChapters(bookId: String): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
       val input = request.body
       val response = for {
         //        auth <- TokenCheckService.apply.getLoginStatus(request)
-        results <- ChapterService.apply.getEntitiesForIds(idList)
+        results <- ChapterService.apply.getBookChapters(bookId)
       } yield results
       response.map(ans => Ok(Json.toJson(ans)))
         .recover {

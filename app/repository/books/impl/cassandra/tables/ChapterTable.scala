@@ -22,17 +22,15 @@ abstract class ChapterTable extends Table[ChapterTable, Chapter] with RootConnec
 
   override lazy val tableName = "chapters"
 
-  object id extends StringColumn with PartitionKey
+  object bookId extends StringColumn with PartitionKey
 
-  object title extends StringColumn
+  object chapterId extends StringColumn with PrimaryKey
 
-  object description extends OptionalStringColumn
+  object chapterTitle extends StringColumn
+
+  object chapterDescription extends OptionalStringColumn
 
   object story extends OptionalStringColumn
-
-  object sectionIds extends ListColumn[String]
-
-  object multimedias extends ListColumn[String]
 
   object dateCreated extends Col[LocalDateTime]
 
@@ -43,24 +41,25 @@ abstract class ChapterTable extends Table[ChapterTable, Chapter] with RootConnec
     */
   def saveEntity(entity: Chapter): Future[ResultSet] = {
     insert
-      .value(_.id, entity.id)
-      .value(_.title, entity.title)
-      .value(_.description, entity.description)
+      .value(_.bookId, entity.bookId)
+      .value(_.chapterId, entity.chapterId)
+      .value(_.chapterTitle, entity.chapterTitle)
+      .value(_.chapterDescription, entity.chapterDescription)
       .value(_.story, entity.story)
-      .value(_.sectionIds, entity.sectionIds)
-      .value(_.multimedias, entity.multimedias)
       .value(_.dateCreated, entity.dateCreated)
       .future()
   }
 
   /**
-    * Delete a chapter
-    * @param id
+    * Delete a chapter given book id and chapter id
+    * @param bookId
+    * @param chapterId
     * @return
     */
-  def deleteEntity(id: String): Future[ResultSet] = {
+  def deleteEntity(bookId: String, chapterId: String): Future[ResultSet] = {
     delete
-      .where(_.id eqs id)
+      .where(_.bookId eqs bookId)
+      .and(_.chapterId eqs chapterId)
       .future()
   }
 
@@ -73,24 +72,83 @@ abstract class ChapterTable extends Table[ChapterTable, Chapter] with RootConnec
   }
 
   /**
+    * Retrieve all chapters in a give book
+    * @param bookId
+    * @return
+    */
+  def getBookChapters(bookId: String): Future[Seq[Chapter]] = {
+    select
+      .where(_.bookId eqs bookId)
+      .fetchEnumerator() run Iteratee.collect()
+  }
+
+  /**
     * Fetch a chapter
     * @param id
     * @return
     */
-  def getEntity(id: String): Future[Option[Chapter]] = {
+  def isChapterAvailable(bookId: String, chapterId: String): Future[Option[Chapter]] = {
     select
-      .where(_.id.eqs(id))
+      .where(_.bookId.eqs(bookId))
+      .and(_.chapterId.eqs(chapterId))
+      .one()
+  }
+
+}
+
+
+abstract class ChapterByIdTable extends Table[ChapterByIdTable, Chapter] with RootConnector {
+
+  override lazy val tableName = "chaptersbyid"
+
+  object bookId extends StringColumn with PrimaryKey
+
+  object chapterId extends StringColumn with PartitionKey
+
+  object chapterTitle extends StringColumn
+
+  object chapterDescription extends OptionalStringColumn
+
+  object story extends OptionalStringColumn
+
+  object dateCreated extends Col[LocalDateTime]
+
+  /**
+    * Save a chapter
+    * @param entity
+    * @return
+    */
+  def saveEntity(entity: Chapter): Future[ResultSet] = {
+    insert
+      .value(_.bookId, entity.bookId)
+      .value(_.chapterId, entity.chapterId)
+      .value(_.chapterTitle, entity.chapterTitle)
+      .value(_.chapterDescription, entity.chapterDescription)
+      .value(_.story, entity.story)
+      .value(_.dateCreated, entity.dateCreated)
+      .future()
+  }
+
+  /**
+    *
+    * @param chapterId
+    * @return
+    */
+  def getEntity(chapterId: String): Future[Option[Chapter]] = {
+    select
+      .where(_.chapterId eqs chapterId)
       .one()
   }
 
   /**
-    * Fetch a list of chapters given IDs
-    * @param ids
+    *
+    * @param chapterId
     * @return
     */
-  def getEntitiesForIds(ids: List[String]): Future[Seq[Chapter]] = {
-    select
-      .where(_.id in ids).fetchEnumerator() run Iteratee.collect()
+  def deleteEntity(chapterId: String): Future[ResultSet] = {
+    delete
+      .where(_.chapterId eqs chapterId)
+      .future()
   }
 
 }

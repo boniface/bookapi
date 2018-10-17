@@ -22,17 +22,15 @@ abstract class SectionTable extends Table[SectionTable, Section] with RootConnec
 
   override lazy val tableName = "sections"
 
-  object id extends StringColumn with PartitionKey
+  object chapterId extends StringColumn with PartitionKey
 
-  object title extends StringColumn
+  object sectionId extends StringColumn with PrimaryKey
 
-  object description extends OptionalStringColumn
+  object sectionTitle extends StringColumn
+
+  object sectionDescription extends OptionalStringColumn
 
   object story extends OptionalStringColumn
-
-  object subsectionIds extends ListColumn[String]
-
-  object multimedias extends ListColumn[String]
 
   object dateCreated extends Col[LocalDateTime]
 
@@ -43,24 +41,25 @@ abstract class SectionTable extends Table[SectionTable, Section] with RootConnec
     */
   def saveEntity(entity: Section): Future[ResultSet] = {
     insert
-      .value(_.id, entity.id)
-      .value(_.title, entity.title)
-      .value(_.description, entity.description)
+      .value(_.chapterId, entity.chapterId)
+      .value(_.sectionId, entity.sectionId)
+      .value(_.sectionTitle, entity.sectionTitle)
+      .value(_.sectionDescription, entity.sectionDescription)
       .value(_.story, entity.story)
-      .value(_.subsectionIds, entity.subsectionIds)
-      .value(_.multimedias, entity.multimedias)
       .value(_.dateCreated, entity.dateCreated)
       .future()
   }
 
   /**
     * Delete a section
-    * @param id
+    * @param chapterId
+    * @param sectionId
     * @return
     */
-  def deleteEntity(id: String): Future[ResultSet] = {
+  def deleteEntity(chapterId: String, sectionId: String): Future[ResultSet] = {
     delete
-      .where(_.id eqs id)
+      .where(_.chapterId eqs chapterId)
+      .and(_.sectionId eqs sectionId)
       .future()
   }
 
@@ -73,23 +72,82 @@ abstract class SectionTable extends Table[SectionTable, Section] with RootConnec
   }
 
   /**
-    * Fetch a section
-    * @param id
+    * Retrieve all sections in a give chapter
+    * @param chapterId
     * @return
     */
-  def getEntity(id: String): Future[Option[Section]] = {
+  def getChapterSections(chapterId: String): Future[Seq[Section]] = {
     select
-      .where(_.id.eqs(id))
+      .where(_.chapterId eqs chapterId)
+      .fetchEnumerator() run Iteratee.collect()
+  }
+
+  /**
+    * Fetch a section given a chapter id and section id
+    * @param chapterId
+    * @param sectionId
+    * @return
+    */
+  def isSectionAvailable(chapterId: String, sectionId: String): Future[Option[Section]] = {
+    select
+      .where(_.chapterId eqs chapterId)
+      .and(_.sectionId eqs sectionId)
+      .one()
+  }
+}
+
+abstract class SectionByIdTable extends Table[SectionByIdTable, Section] with RootConnector {
+
+  override lazy val tableName = "sectionsbyid"
+
+  object chapterId extends StringColumn with PrimaryKey
+
+  object sectionId extends StringColumn with PartitionKey
+
+  object sectionTitle extends StringColumn
+
+  object sectionDescription extends OptionalStringColumn
+
+  object story extends OptionalStringColumn
+
+  object dateCreated extends Col[LocalDateTime]
+
+  /**
+    * Save a section
+    * @param entity
+    * @return
+    */
+  def saveEntity(entity: Section): Future[ResultSet] = {
+    insert
+      .value(_.chapterId, entity.chapterId)
+      .value(_.sectionId, entity.sectionId)
+      .value(_.sectionTitle, entity.sectionTitle)
+      .value(_.sectionDescription, entity.sectionDescription)
+      .value(_.story, entity.story)
+      .value(_.dateCreated, entity.dateCreated)
+      .future()
+  }
+
+  /**
+    *
+    * @param sectionId
+    * @return
+    */
+  def getEntity(sectionId: String): Future[Option[Section]] = {
+    select
+      .where(_.sectionId eqs sectionId)
       .one()
   }
 
   /**
-    * Fetch sections given IDs
-    * @param ids
+    *
+    * @param sectionId
     * @return
     */
-  def getEntitiesForIds(ids: List[String]): Future[Seq[Section]] = {
-    select
-      .where(_.id in ids).fetchEnumerator() run Iteratee.collect()
+  def deleteEntity(sectionId: String): Future[ResultSet] = {
+    delete
+      .where(_.sectionId eqs sectionId)
+      .future()
   }
+
 }

@@ -21,20 +21,23 @@ import scala.concurrent.Future
   *
   */
 class BookRepositoryImpl extends BookRepository {
+
   override def saveEntity(entity: Book): Future[Boolean] = {
     BookDatabase.BookTable.saveEntity(entity).map(result => result.isExhausted())
     BookDatabase.BookByIdTable.saveEntity(entity).map(result => result.isExhausted())
   }
 
-  override def getSiteEntities(siteId: String): Future[Seq[Book]] = BookDatabase.BookTable.retrieveSiteBooks(siteId)
+  override def getSiteEntities(siteId: String): Future[Seq[Book]] = BookDatabase.BookTable.getSiteEntities(siteId)
 
   override def getEntities: Future[Seq[Book]] = BookDatabase.BookTable.getEntities
 
   override def getEntity(id: String): Future[Option[Book]] = BookDatabase.BookByIdTable.getEntity(id)
 
+  override def getBookCountForSite(siteId: String): Future[Option[Long]] = BookDatabase.BookTable.getBookCountForSite(siteId)
+
   override def deleteEntity(entity: Book): Future[Boolean] = {
-    BookDatabase.BookTable.deleteEntity(entity.siteId, entity.id).map(result => result.isExhausted())
-    BookDatabase.BookByIdTable.deleteEntity(entity.id).map(result => result.isExhausted())
+    BookDatabase.BookTable.deleteEntity(entity.siteId, entity.bookId).map(result => result.isExhausted())
+    BookDatabase.BookByIdTable.deleteEntity(entity.bookId).map(result => result.isExhausted())
   }
 
   override def createTable: Future[Boolean] = {

@@ -58,13 +58,12 @@ class SubsectionController@Inject()
         }
   }
 
-  def getEntitiesForIds(ids: String): Action[AnyContent] = Action.async {
-    val idList = ids.split(",").map(_.trim).filter(!_.isEmpty).toList
+  def getSectionSubsections(sectionId: String): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
       val input = request.body
       val response = for {
         //        auth <- TokenCheckService.apply.getLoginStatus(request)
-        results <- SubsectionService.apply.getEntitiesForIds(idList)
+        results <- SubsectionService.apply.getSectionSubsections(sectionId)
       } yield results
       response.map(ans => Ok(Json.toJson(ans)))
         .recover{

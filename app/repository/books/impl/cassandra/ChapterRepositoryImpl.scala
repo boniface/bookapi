@@ -13,23 +13,28 @@ import com.outworkers.phantom.dsl._
 import configuration.connections.DataConnection
 import domain.books.Chapter
 import repository.books.ChapterRepository
-import repository.books.impl.cassandra.tables.{ChapterTable}
+import repository.books.impl.cassandra.tables.{ChapterByIdTable, ChapterTable}
 
 import scala.concurrent.Future
 
 class ChapterRepositoryImpl extends ChapterRepository {
-  override def saveEntity(entity: Chapter): Future[Boolean] =
+  override def saveEntity(entity: Chapter): Future[Boolean] = {
     ChapterDatabase.ChapterTable.saveEntity(entity).map(result => result.isExhausted())
+    ChapterDatabase.ChapterByIdTable.saveEntity(entity).map(result => result.isExhausted())
+  }
 
   override def getEntities: Future[Seq[Chapter]] =
     ChapterDatabase.ChapterTable.getEntities
 
-  override def getEntity(id: String): Future[Option[Chapter]] = ChapterDatabase.ChapterTable.getEntity(id)
+  override def getEntity(chapterId: String): Future[Option[Chapter]] =
+    ChapterDatabase.ChapterByIdTable.getEntity(chapterId)
 
-  override def getEntitiesForIds(ids: List[String]): Future[Seq[Chapter]] = ChapterDatabase.ChapterTable.getEntitiesForIds(ids)
+  override def getBookChapters(bookId: String): Future[Seq[Chapter]] = ChapterDatabase.ChapterTable.getBookChapters(bookId)
 
-  override def deleteEntity(entity: Chapter): Future[Boolean] =
-    ChapterDatabase.ChapterTable.deleteEntity(entity.id).map(result => result.isExhausted())
+  override def deleteEntity(entity: Chapter): Future[Boolean] = {
+    ChapterDatabase.ChapterTable.deleteEntity(entity.bookId, entity.chapterId).map(result => result.isExhausted())
+    ChapterDatabase.ChapterByIdTable.deleteEntity(entity.chapterId).map(result => result.isExhausted())
+  }
 
   override def createTable: Future[Boolean] = {
     implicit def keySpace: KeySpace = DataConnection.devKeySpaceQuery.keySpace
@@ -37,12 +42,15 @@ class ChapterRepositoryImpl extends ChapterRepository {
     implicit def session: Session = DataConnection.connector.session
 
     ChapterDatabase.ChapterTable.create.ifNotExists().future().map(result => result.head.isExhausted())
+    ChapterDatabase.ChapterByIdTable.create.ifNotExists().future().map(result => result.head.isExhausted())
   }
 }
 
 class ChapterDatabase(override val connector: KeySpaceDef) extends Database[ChapterDatabase](connector) {
 
   object ChapterTable extends ChapterTable with connector.Connector
+
+  object ChapterByIdTable extends ChapterByIdTable with connector.Connector
 
 }
 

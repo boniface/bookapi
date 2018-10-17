@@ -5,14 +5,14 @@
  * Last Modified: 2018/09/29 3:10 PM
  */
 
-package repository.books.impl.cassandra.tables
+package repository.multimedia.impl.cassandra.tables
 
 import java.time.LocalDateTime
 
 import com.outworkers.phantom.dsl._
-import com.outworkers.phantom.streams._
 import com.outworkers.phantom.jdk8._
-import domain.books.Multimedia
+import com.outworkers.phantom.streams._
+import domain.multimedia.Multimedia
 
 import scala.concurrent.Future
 

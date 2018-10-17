@@ -5,11 +5,11 @@
  * Last Modified: 2018/09/25 8:49 AM
  */
 
-package services.books.impl
+package services.multimedia.impl
 
-import domain.books.Multimedia
-import repository.books.MultimediaRepository
-import services.books.MultimediaService
+import domain.multimedia.Multimedia
+import repository.multimedia.MultimediaRepository
+import services.multimedia.MultimediaService
 
 import scala.concurrent.Future
 

@@ -60,9 +60,10 @@ abstract class UserTable extends Table[UserTable, User] with RootConnector {
       .fetchEnumerator() run Iteratee.collect()
   }
 
-  def deleteEntity(siteId: String, email: String): Future[ResultSet] = {
+  def deleteEntity(siteId: String, userId: String, email: String): Future[ResultSet] = {
     delete
       .where(_.siteId eqs siteId)
+      .and(_.userId eqs userId)
       .and(_.email eqs email)
       .future()
   }
@@ -92,7 +93,7 @@ abstract class UserByEmailTable extends Table[UserByEmailTable, User] with RootC
     insert
       .value(_.siteId, entity.siteId)
       .value(_.email, entity.email)
-      .value(_.siteId, entity.siteId)
+      .value(_.userId, entity.userId)
       .value(_.firstName, entity.firstName)
       .value(_.middleName, entity.middleName)
       .value(_.lastName, entity.lastName)
@@ -108,9 +109,10 @@ abstract class UserByEmailTable extends Table[UserByEmailTable, User] with RootC
       .fetchEnumerator() run Iteratee.collect()
   }
 
-  def deleteEntity(email: String, siteId: String): Future[ResultSet] = {
+  def deleteEntity(email: String, userId: String, siteId: String): Future[ResultSet] = {
     delete
       .where(_.email eqs email)
+      .and(_.userId eqs userId)
       .and(_.siteId eqs siteId)
       .future()
   }

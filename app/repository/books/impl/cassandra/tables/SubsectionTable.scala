@@ -22,47 +22,52 @@ abstract class SubsectionTable extends Table[SubsectionTable, Subsection] with R
 
   override lazy val tableName = "subsections"
 
-  object id extends StringColumn with PartitionKey
+  object sectionId extends StringColumn with PartitionKey
 
-  object title extends StringColumn
+  object subsectionId extends StringColumn with PrimaryKey
 
-  object description extends OptionalStringColumn
+  object subsectionTitle extends StringColumn
+
+  object subsectionDescription extends OptionalStringColumn
 
   object story extends OptionalStringColumn
-
-  object multimedias extends ListColumn[String]
 
   object dateCreated extends Col[LocalDateTime]
 
   /**
     * Save a subsection
+    *
     * @param entity
     * @return
     */
   def saveEntity(entity: Subsection): Future[ResultSet] = {
     insert
-      .value(_.id, entity.id)
-      .value(_.title, entity.title)
-      .value(_.description, entity.description)
+      .value(_.sectionId, entity.sectionId)
+      .value(_.subsectionId, entity.subsectionId)
+      .value(_.subsectionTitle, entity.subsectionTitle)
+      .value(_.subsectionDescription, entity.subsectionDescription)
       .value(_.story, entity.story)
-      .value(_.multimedias, entity.multimedias)
       .value(_.dateCreated, entity.dateCreated)
       .future()
   }
 
   /**
     * Delete a subsection
-    * @param id
+    *
+    * @param sectionId
+    * @param subsectionId
     * @return
     */
-  def deleteEntity(id: String): Future[ResultSet] = {
+  def deleteEntity(sectionId: String, subsectionId: String): Future[ResultSet] = {
     delete
-      .where(_.id eqs id)
+      .where(_.sectionId eqs sectionId)
+      .and(_.subsectionId eqs subsectionId)
       .future()
   }
 
   /**
     * Get all subsections
+    *
     * @return
     */
   def getEntities: Future[Seq[Subsection]] = {
@@ -71,22 +76,85 @@ abstract class SubsectionTable extends Table[SubsectionTable, Subsection] with R
 
   /**
     * Get a subsection
-    * @param id
+    *
+    * @param sectionId
+    * @param subsectionId
     * @return
     */
-  def getEntity(id: String): Future[Option[Subsection]] = {
+  def isSubsectionAvailable(sectionId: String, subsectionId: String): Future[Option[Subsection]] = {
     select
-      .where(_.id.eqs(id))
+      .where(_.sectionId eqs sectionId)
+      .and(_.subsectionId eqs subsectionId)
       .one()
   }
 
   /**
-    * Fetch subsections given IDs
-    * @param ids
+    * Retrieve all subsections in a given section
+    *
+    * @param sectionId
     * @return
     */
-  def getEntitiesForIds(ids: List[String]): Future[Seq[Subsection]] = {
+  def getSectionSubsections(sectionId: String): Future[Seq[Subsection]] = {
     select
-      .where(_.id in ids).fetchEnumerator() run Iteratee.collect()
+      .where(_.sectionId eqs sectionId)
+      .fetchEnumerator() run Iteratee.collect()
   }
+}
+
+abstract class SubsectionByIdTable extends Table[SubsectionByIdTable, Subsection] with RootConnector {
+
+  override lazy val tableName = "subsectionsbyid"
+
+  object sectionId extends StringColumn with PrimaryKey
+
+  object subsectionId extends StringColumn with PartitionKey
+
+  object subsectionTitle extends StringColumn
+
+  object subsectionDescription extends OptionalStringColumn
+
+  object story extends OptionalStringColumn
+
+  object dateCreated extends Col[LocalDateTime]
+
+  /**
+    * Save a subsection
+    *
+    * @param entity
+    * @return
+    */
+  def saveEntity(entity: Subsection): Future[ResultSet] = {
+    insert
+      .value(_.sectionId, entity.sectionId)
+      .value(_.subsectionId, entity.subsectionId)
+      .value(_.subsectionTitle, entity.subsectionTitle)
+      .value(_.subsectionDescription, entity.subsectionDescription)
+      .value(_.story, entity.story)
+      .value(_.dateCreated, entity.dateCreated)
+      .future()
+  }
+
+  /**
+    *
+    * @param subsectionId
+    * @return
+    */
+  def getEntity(subsectionId: String): Future[Option[Subsection]] = {
+    select
+      .where(_.subsectionId eqs subsectionId)
+      .one()
+  }
+
+  /**
+    *
+    * @param subsectionId
+    * @return
+    */
+  def deleteEntity(subsectionId: String): Future[ResultSet] = {
+    delete
+      .where(_.subsectionId eqs subsectionId)
+      .future()
+  }
+
+
 }

@@ -2,9 +2,9 @@ package services
 
 import java.time.LocalDateTime
 
-import domain.books.Multimedia
+import domain.multimedia.Multimedia
 import org.scalatest.FunSuite
-import services.books.MultimediaService
+import services.multimedia.MultimediaService
 
 import scala.concurrent.Await
 import scala.concurrent.duration._

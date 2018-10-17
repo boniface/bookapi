@@ -14,7 +14,7 @@ import repository.books.impl.cassandra.SubsectionRepositoryImpl
 import scala.concurrent.Future
 
 trait SubsectionRepository extends Repository[Subsection] {
-  def getEntitiesForIds(ids: List[String]): Future[Seq[Subsection]]
+  def getSectionSubsections(sectionId: String): Future[Seq[Subsection]]
 }
 
 object SubsectionRepository {

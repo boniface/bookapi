@@ -5,11 +5,11 @@
  * Last Modified: 2018/09/25 8:47 AM
  */
 
-package services.books
+package services.multimedia
 
-import domain.books.Multimedia
+import domain.multimedia.Multimedia
 import services.CrudService
-import services.books.impl.MultimediaServiceImpl
+import services.multimedia.impl.MultimediaServiceImpl
 
 trait MultimediaService extends CrudService[Multimedia] {}
 

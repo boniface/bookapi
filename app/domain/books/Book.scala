@@ -13,27 +13,30 @@ import play.api.libs.json.Json
 /**
   *
   * @param siteId
-  * @param id
-  * @param title
+  * @param bookId
+  * @param bookTitle
+  * @param bookDescription
+  * @param story
   * @param isbn
   * @param eisbn
   * @param author
   * @param publisher
   * @param datePublished
-  * @param chapterIds
+  * @param dateCreated
   */
 case class Book(
                  siteId: String,
-                 id: String,
-                 title: String,
-                 isbn: String,
-                 eisbn: String,
+                 bookId: String,
+                 bookTitle: String,
+                 bookDescription: Option[String] = None,
+                 story: Option[String] = None,
+                 isbn: Option[String] = None,
+                 eisbn: Option[String] = None,
                  author: String,
                  publisher: String,
                  datePublished: LocalDateTime,
-                 chapterIds: List[String] = List[String]()
-               ) extends BookBase {}
-
+                 dateCreated: LocalDateTime = LocalDateTime.now
+               ) {}
 
 object Book {
   implicit val bookFormat = Json.format[Book]

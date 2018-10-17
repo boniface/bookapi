@@ -5,11 +5,11 @@
  * Last Modified: 2018/09/25 8:25 AM
  */
 
-package repository.books
+package repository.multimedia
 
-import domain.books.Multimedia
+import domain.multimedia.Multimedia
 import repository.Repository
-import repository.books.impl.cassandra.MultimediaRepositoryImpl
+import repository.multimedia.impl.cassandra.MultimediaRepositoryImpl
 
 trait MultimediaRepository extends Repository[Multimedia] {}
 

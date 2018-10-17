@@ -43,13 +43,12 @@ class SectionController @Inject()
         }
   }
 
-  def getEntitiesForIds(ids: String): Action[AnyContent] = Action.async {
-    val idList = ids.split(",").map(_.trim).filter(!_.isEmpty).toList
+  def getChapterSections(chapterId: String): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
       val input = request.body
       val response = for {
       //        auth <- TokenCheckService.apply.getLoginStatus(request)
-        results <- SectionService.apply.getEntitiesForIds(idList)
+        results <- SectionService.apply.getChapterSections(chapterId)
        } yield results
       response.map(ans => Ok(Json.toJson(ans)))
         .recover{

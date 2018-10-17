@@ -14,7 +14,7 @@ import repository.books.impl.cassandra.ChapterRepositoryImpl
 import scala.concurrent.Future
 
 trait ChapterRepository extends Repository[Chapter] {
-  def getEntitiesForIds(ids: List[String]): Future[Seq[Chapter]]
+  def getBookChapters(bookId: String): Future[Seq[Chapter]]
 }
 
 object ChapterRepository {

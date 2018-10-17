@@ -26,8 +26,8 @@ class UserRepositoryImpl extends UserRepository {
   }
 
   override def deleteEntity(entity: User): Future[Boolean] = {
-    UserDatabase.userTable.deleteEntity(entity.siteId, entity.email).map(result => result.isExhausted())
-    UserDatabase.userByEmailTable.deleteEntity(entity.siteId, entity.email).map(result => result.isExhausted())
+    UserDatabase.userTable.deleteEntity(entity.siteId, entity.userId, entity.email).map(result => result.isExhausted())
+    UserDatabase.userByEmailTable.deleteEntity(entity.email, entity.userId, entity.siteId).map(result => result.isExhausted())
     UserDatabase.userByIdTable.deleteEntity(entity.userId).map(result => result.isExhausted())
   }
 

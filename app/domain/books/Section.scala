@@ -7,19 +7,27 @@
 
 package domain.books
 
+import java.time.LocalDateTime
+
 import play.api.libs.json.Json
 
 /**
   *
-  * @param id
-  * @param title
-  * @param subsectionIds
+  * @param chapterId
+  * @param sectionId
+  * @param sectionTitle
+  * @param sectionDescription
+  * @param story
+  * @param dateCreated
   */
 case class Section(
-                    id: String,
-                    title: String,
-                    subsectionIds: List[String] = List[String]()
-                  ) extends BookBase {}
+                    chapterId: String,
+                    sectionId: String,
+                    sectionTitle: String,
+                    sectionDescription: Option[String] = None,
+                    story: Option[String] = None,
+                    dateCreated: LocalDateTime = LocalDateTime.now
+                  )
 
 object Section {
   implicit val sectionFormat = Json.format[Section]

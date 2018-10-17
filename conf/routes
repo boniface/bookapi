@@ -17,3 +17,4 @@ GET        /assets/*file        controllers.Assets.versioned(path="/public", fil
 ->         /users               controllers.users.UsersRouter
 ->         /sites               controllers.sites.SiteRouter
 ->         /books               controllers.books.BookApiRouter
+#->         /dashboard           controllers.dashboard.DashboardRouter

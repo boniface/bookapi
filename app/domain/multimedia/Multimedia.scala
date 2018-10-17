@@ -5,7 +5,7 @@
  * Last Modified: 2018/09/25 9:55 AM
  */
 
-package domain.books
+package domain.multimedia
 
 import java.time.LocalDateTime
 

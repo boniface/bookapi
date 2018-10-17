@@ -5,15 +5,15 @@
  * Last Modified: 2018/09/25 8:44 AM
  */
 
-package repository.books.impl.cassandra
+package repository.multimedia.impl.cassandra
 
 import com.outworkers.phantom.connectors.KeySpace
 import com.outworkers.phantom.database.Database
 import com.outworkers.phantom.dsl._
 import configuration.connections.DataConnection
-import domain.books.Multimedia
-import repository.books.MultimediaRepository
-import repository.books.impl.cassandra.tables.{MultimediaTable}
+import domain.multimedia.Multimedia
+import repository.multimedia.MultimediaRepository
+import repository.multimedia.impl.cassandra.tables.MultimediaTable
 
 import scala.concurrent.Future
 

@@ -15,7 +15,7 @@ import scala.concurrent.Future
 
 trait SectionService extends CrudService[Section] {
 
-  def getEntitiesForIds(ids: List[String]): Future[Seq[Section]]
+  def getChapterSections(chapterId: String): Future[Seq[Section]]
 
 }
 
