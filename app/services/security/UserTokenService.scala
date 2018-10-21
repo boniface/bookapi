@@ -4,10 +4,18 @@ import domain.security.UserToken
 import services.CrudService
 import services.security.Impl.UserTokenServiceImpl
 
-trait UserTokenService extends CrudService[UserToken]{
+import scala.concurrent.Future
+
+trait UserTokenService  extends CrudService[UserToken]{
+
+  def getSiteUserTokens(siteId: String): Future[Seq[UserToken]]
+
+  def revokeUserToken(token: String): Future[Boolean]
+
+  def getUserTokens(userId: String): Future[Seq[UserToken]]
 
 }
 
-object UserTokenService{
+object UserTokenService {
   def apply: UserTokenService = new UserTokenServiceImpl()
 }

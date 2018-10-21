@@ -1,16 +1,17 @@
 package services.security.Impl
 
+import configuration.util.HashcodeKeys
 import domain.security.ApiKeys
 import org.apache.commons.lang3.RandomStringUtils
 import org.jose4j.jwk.{EcJwkGenerator, EllipticCurveJsonWebKey, JsonWebKey, PublicJsonWebKey}
 import org.jose4j.keys.EllipticCurves
-import org.mindrot.jbcrypt.BCrypt
 import repository.security.ApiKeysRepository
 import services.security.ApiKeysService
 
 import scala.concurrent.Future
 
 class ApiKeysServiceImpl extends ApiKeysService {
+
 
   override def saveEntity(entity: ApiKeys): Future[Boolean] = {
     ApiKeysRepository.apply.saveEntity(entity)
@@ -32,17 +33,16 @@ class ApiKeysServiceImpl extends ApiKeysService {
     ApiKeysRepository.apply.createTable
   }
 
-  override def generateApiKeys(): String = {
+  override def generateResetToken(): String = {
     val length: Int = 32
     val useLetters: Boolean = true
     val useNumbers: Boolean = true
-    val keys = RandomStringUtils.random(length, useLetters, useNumbers).toLowerCase
-    BCrypt.hashpw(keys, BCrypt.gensalt(27))
+    RandomStringUtils.random(length, useLetters, useNumbers).toLowerCase
   }
 
   override def getPublicJsonWebKey(publicApiKey: Option[ApiKeys]): PublicJsonWebKey = {
     val key = publicApiKey match {
-      case Some(key) =>  key.value
+      case Some(apiKeys: ApiKeys) =>  apiKeys.value
       case None => ApiKeys.apply().value
     }
     PublicJsonWebKey.Factory.newPublicJwk(key)
@@ -52,5 +52,11 @@ class ApiKeysServiceImpl extends ApiKeysService {
     val key: EllipticCurveJsonWebKey = EcJwkGenerator.generateJwk(EllipticCurves.P256)
     key.setKeyId(phrase)
     key.toJson(JsonWebKey.OutputControlLevel.INCLUDE_PRIVATE)
+  }
+
+  override def initKey: Future[Boolean] = {
+    val key = generateJsonPublicKey(HashcodeKeys.PUBLICKEY)
+    val keys = ApiKeys(HashcodeKeys.PUBLICKEY,key,HashcodeKeys.ACTIVE)
+    saveEntity(keys)
   }
 }

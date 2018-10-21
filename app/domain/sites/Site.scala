@@ -9,10 +9,7 @@ case class Site(
                siteName: String,
                siteDescription: Option[String],
                dateCreated: LocalDateTime = LocalDateTime.now
-               ) {
-
-}
-
+               )
 object Site {
   implicit val siteFormat = Json.format[Site]
 }

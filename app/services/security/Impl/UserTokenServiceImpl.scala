@@ -2,7 +2,9 @@ package services.security.Impl
 
 import domain.security.UserToken
 import repository.security.UserTokenRepository
-import services.security.UserTokenService
+import services.security.{TokenService, UserTokenService}
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Future
 
@@ -27,7 +29,21 @@ class UserTokenServiceImpl extends UserTokenService{
     UserTokenRepository.apply.createTable
   }
 
+  override def getSiteUserTokens(siteId: String): Future[Seq[UserToken]] = ???
+
+  override def getUserTokens(userId: String): Future[Seq[UserToken]] = {
+    UserTokenRepository.apply.getUserTokens(userId)
+  }
 
 
+  override def revokeUserToken(token: String): Future[Boolean] = {
 
+    for {
+      claims <- TokenService.apply.getJwtClaimsFromTokenString(token)
+      siteId <- TokenService.apply.getSiteIdFromTokenString(token)
+      userId <- TokenService.apply.getSiteIdFromTokenString(token)
+      deleted <- UserTokenService.apply.deleteEntity(UserToken(siteId, userId, claims.getJwtId))
+    } yield deleted
+
+  }
 }
