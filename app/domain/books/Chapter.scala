@@ -15,6 +15,7 @@ import play.api.libs.json.Json
   *
   * @param bookId
   * @param chapterId
+  * @param chapterNumber
   * @param chapterTitle
   * @param chapterDescription
   * @param story
@@ -23,11 +24,13 @@ import play.api.libs.json.Json
 case class Chapter(
                     bookId: String,
                     chapterId: String,
+                    chapterNumber: Int,
                     chapterTitle: String,
                     chapterDescription: Option[String] = None,
                     story: Option[String] = None,
+                    chapterLink: String,
                     dateCreated: LocalDateTime = LocalDateTime.now
-                  ) {}
+                  )
 
 object Chapter {
   implicit val chapterFormat = Json.format[Chapter]
