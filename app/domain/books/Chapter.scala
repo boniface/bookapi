@@ -19,6 +19,7 @@ import play.api.libs.json.Json
   * @param chapterTitle
   * @param chapterDescription
   * @param story
+  * @param chapterLink
   * @param dateCreated
   */
 case class Chapter(
