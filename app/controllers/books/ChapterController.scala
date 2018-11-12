@@ -1,10 +1,10 @@
 package controllers.books
 
-import domain.books.Chapter
+import domain.books.{Chapter}
 import javax.inject.Inject
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
-import services.books.ChapterService
+import services.books.{ChapterService}
 import domain.security.TokenFailExcerption
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -15,10 +15,20 @@ import scala.concurrent.ExecutionContext.Implicits.global
   */
 class ChapterController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
 
+  val rootLink = "/plbbook/"
+
+  def processInput(chapter: Chapter) = {
+    val chapterLink = rootLink + chapter.chapterTitle.replaceAll("[[&*]+$]", "")
+      .split("\\s+")
+      .map(_.toLowerCase)
+      .mkString("-")
+    chapter.copy(chapterLink = chapterLink)
+  }
+
   def create: Action[JsValue] = Action.async(parse.json) {
     request =>
       val input = request.body
-      val entity = Json.fromJson[Chapter](input).get
+      val entity = processInput(Json.fromJson[Chapter](input).get)
       val response = for {
         //        auth <- TokenCheckService.apply.getLoginStatus(request)
         results <- ChapterService.apply.saveEntity(entity)
@@ -53,11 +63,12 @@ class ChapterController @Inject()(cc: ControllerComponents) extends AbstractCont
         //        auth <- TokenCheckService.apply.getLoginStatus(request)
         results <- ChapterService.apply.getEntities
       } yield results
-      response.map(ans => Ok(Json.toJson(ans)))
-        .recover {
-          case tokenFailExcerption: TokenFailExcerption => Unauthorized
-          case otherException: Exception => InternalServerError
-        }
+      response.map(ans => {
+        Ok(Json.toJson(ans))
+      }).recover {
+        case tokenFailExcerption: TokenFailExcerption => Unauthorized
+        case otherException: Exception => InternalServerError
+      }
   }
 
   def getBookChapters(bookId: String): Action[AnyContent] = Action.async {
@@ -67,11 +78,13 @@ class ChapterController @Inject()(cc: ControllerComponents) extends AbstractCont
         //        auth <- TokenCheckService.apply.getLoginStatus(request)
         results <- ChapterService.apply.getBookChapters(bookId)
       } yield results
-      response.map(ans => Ok(Json.toJson(ans)))
-        .recover {
-          case tokenFailExcerption: TokenFailExcerption => Unauthorized
-          case otherException: Exception => InternalServerError
-        }
+      response.map(ans => {
+        val sorted = ans.sortBy(_.chapterNumber)
+        Ok(Json.toJson(sorted))
+      }).recover {
+        case tokenFailExcerption: TokenFailExcerption => Unauthorized
+        case otherException: Exception => InternalServerError
+      }
   }
 
   def delete: Action[JsValue] = Action.async(parse.json) {

@@ -26,11 +26,15 @@ abstract class ChapterTable extends Table[ChapterTable, Chapter] with RootConnec
 
   object chapterId extends StringColumn with PrimaryKey
 
+  object chapterNumber extends IntColumn
+
   object chapterTitle extends StringColumn
 
   object chapterDescription extends OptionalStringColumn
 
   object story extends OptionalStringColumn
+
+  object chapterLink extends StringColumn
 
   object dateCreated extends Col[LocalDateTime]
 
@@ -43,9 +47,11 @@ abstract class ChapterTable extends Table[ChapterTable, Chapter] with RootConnec
     insert
       .value(_.bookId, entity.bookId)
       .value(_.chapterId, entity.chapterId)
+      .value(_.chapterNumber, entity.chapterNumber)
       .value(_.chapterTitle, entity.chapterTitle)
       .value(_.chapterDescription, entity.chapterDescription)
       .value(_.story, entity.story)
+      .value(_.chapterLink, entity.chapterLink)
       .value(_.dateCreated, entity.dateCreated)
       .future()
   }
@@ -105,11 +111,15 @@ abstract class ChapterByIdTable extends Table[ChapterByIdTable, Chapter] with Ro
 
   object chapterId extends StringColumn with PartitionKey
 
+  object chapterNumber extends IntColumn
+
   object chapterTitle extends StringColumn
 
   object chapterDescription extends OptionalStringColumn
 
   object story extends OptionalStringColumn
+
+  object chapterLink extends StringColumn
 
   object dateCreated extends Col[LocalDateTime]
 
@@ -122,9 +132,11 @@ abstract class ChapterByIdTable extends Table[ChapterByIdTable, Chapter] with Ro
     insert
       .value(_.bookId, entity.bookId)
       .value(_.chapterId, entity.chapterId)
+      .value(_.chapterNumber, entity.chapterNumber)
       .value(_.chapterTitle, entity.chapterTitle)
       .value(_.chapterDescription, entity.chapterDescription)
       .value(_.story, entity.story)
+      .value(_.chapterLink, entity.chapterLink)
       .value(_.dateCreated, entity.dateCreated)
       .future()
   }
