@@ -50,7 +50,7 @@ class SectionController @Inject()
       //        auth <- TokenCheckService.apply.getLoginStatus(request)
         results <- SectionService.apply.getChapterSections(chapterId)
        } yield results
-      response.map(ans => Ok(Json.toJson(ans)))
+      response.map(ans => Ok(Json.toJson(ans.sorted(Section.orderingBySectionNumber))))
         .recover{
           case tokenFailExcerption: TokenFailExcerption => Unauthorized
           case otherException: Exception => InternalServerError

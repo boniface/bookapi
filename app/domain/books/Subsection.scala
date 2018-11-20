@@ -15,6 +15,7 @@ import play.api.libs.json.Json
   *
   * @param sectionId
   * @param subsectionId
+  * @param subsectionNumber
   * @param subsectionTitle
   * @param subsectionDescription
   * @param story
@@ -23,6 +24,7 @@ import play.api.libs.json.Json
 case class Subsection(
                        sectionId: String,
                        subsectionId: String,
+                       subsectionNumber: Int,
                        subsectionTitle: String,
                        subsectionDescription: Option[String] = None,
                        story: Option[String] = None,
@@ -31,4 +33,6 @@ case class Subsection(
 
 object Subsection {
   implicit val subsectionFormat = Json.format[Subsection]
+
+  val orderingBySubsectionNumber: Ordering[Subsection] = Ordering.by(subsection => subsection.subsectionNumber)
 }

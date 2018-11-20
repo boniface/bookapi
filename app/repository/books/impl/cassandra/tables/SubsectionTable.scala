@@ -26,6 +26,8 @@ abstract class SubsectionTable extends Table[SubsectionTable, Subsection] with R
 
   object subsectionId extends StringColumn with PrimaryKey
 
+  object subsectionNumber extends IntColumn
+
   object subsectionTitle extends StringColumn
 
   object subsectionDescription extends OptionalStringColumn
@@ -44,6 +46,7 @@ abstract class SubsectionTable extends Table[SubsectionTable, Subsection] with R
     insert
       .value(_.sectionId, entity.sectionId)
       .value(_.subsectionId, entity.subsectionId)
+      .value(_.subsectionNumber, entity.subsectionNumber)
       .value(_.subsectionTitle, entity.subsectionTitle)
       .value(_.subsectionDescription, entity.subsectionDescription)
       .value(_.story, entity.story)
@@ -109,6 +112,8 @@ abstract class SubsectionByIdTable extends Table[SubsectionByIdTable, Subsection
 
   object subsectionId extends StringColumn with PartitionKey
 
+  object subsectionNumber extends IntColumn
+
   object subsectionTitle extends StringColumn
 
   object subsectionDescription extends OptionalStringColumn
@@ -127,6 +132,7 @@ abstract class SubsectionByIdTable extends Table[SubsectionByIdTable, Subsection
     insert
       .value(_.sectionId, entity.sectionId)
       .value(_.subsectionId, entity.subsectionId)
+      .value(_.subsectionNumber, entity.subsectionNumber)
       .value(_.subsectionTitle, entity.subsectionTitle)
       .value(_.subsectionDescription, entity.subsectionDescription)
       .value(_.story, entity.story)

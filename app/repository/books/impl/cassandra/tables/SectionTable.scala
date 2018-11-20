@@ -26,6 +26,8 @@ abstract class SectionTable extends Table[SectionTable, Section] with RootConnec
 
   object sectionId extends StringColumn with PrimaryKey
 
+  object sectionNumber extends IntColumn
+
   object sectionTitle extends StringColumn
 
   object sectionDescription extends OptionalStringColumn
@@ -43,6 +45,7 @@ abstract class SectionTable extends Table[SectionTable, Section] with RootConnec
     insert
       .value(_.chapterId, entity.chapterId)
       .value(_.sectionId, entity.sectionId)
+      .value(_.sectionNumber, entity.sectionNumber)
       .value(_.sectionTitle, entity.sectionTitle)
       .value(_.sectionDescription, entity.sectionDescription)
       .value(_.story, entity.story)
@@ -104,6 +107,8 @@ abstract class SectionByIdTable extends Table[SectionByIdTable, Section] with Ro
 
   object sectionId extends StringColumn with PartitionKey
 
+  object sectionNumber extends IntColumn
+
   object sectionTitle extends StringColumn
 
   object sectionDescription extends OptionalStringColumn
@@ -121,6 +126,7 @@ abstract class SectionByIdTable extends Table[SectionByIdTable, Section] with Ro
     insert
       .value(_.chapterId, entity.chapterId)
       .value(_.sectionId, entity.sectionId)
+      .value(_.sectionNumber, entity.sectionNumber)
       .value(_.sectionTitle, entity.sectionTitle)
       .value(_.sectionDescription, entity.sectionDescription)
       .value(_.story, entity.story)

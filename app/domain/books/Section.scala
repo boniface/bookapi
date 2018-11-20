@@ -16,6 +16,7 @@ import play.api.libs.json.Json
   * @param chapterId
   * @param sectionId
   * @param sectionTitle
+  * @param sectionNumber
   * @param sectionDescription
   * @param story
   * @param dateCreated
@@ -23,6 +24,7 @@ import play.api.libs.json.Json
 case class Section(
                     chapterId: String,
                     sectionId: String,
+                    sectionNumber: Int,
                     sectionTitle: String,
                     sectionDescription: Option[String] = None,
                     story: Option[String] = None,
@@ -31,4 +33,6 @@ case class Section(
 
 object Section {
   implicit val sectionFormat = Json.format[Section]
+
+  val orderingBySectionNumber: Ordering[Section] = Ordering.by(section => section.sectionNumber)
 }

@@ -65,7 +65,7 @@ class SubsectionController@Inject()
         //        auth <- TokenCheckService.apply.getLoginStatus(request)
         results <- SubsectionService.apply.getSectionSubsections(sectionId)
       } yield results
-      response.map(ans => Ok(Json.toJson(ans)))
+      response.map(ans => Ok(Json.toJson(ans.sorted(Subsection.orderingBySubsectionNumber))))
         .recover{
           case tokenFailExcerption: TokenFailExcerption => Unauthorized
           case otherException: Exception => InternalServerError
