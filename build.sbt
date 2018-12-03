@@ -8,12 +8,12 @@ version := "1.0-SNAPSHOT"
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala, DebianPlugin, JavaAppPackaging, SystemdPlugin)
 
-scalaVersion := "2.12.6"
+scalaVersion := "2.12.7"
 
 scalacOptions += "-Ypartial-unification"
 
-val PhantomVersion =  "2.24.10"
-val PlayFrameWorkVersion = "2.6.19"
+val PhantomVersion =  "2.29.0"
+val PlayFrameWorkVersion = "2.6.20"
 val catsVersion = "1.3.1"
 
 maintainer := "Boniface Kabaso <boniface@kabaso.com>"
