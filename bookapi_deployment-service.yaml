@@ -26,7 +26,7 @@ spec:
                 - DC2
       containers:
       - name: bookapi
-        image: bonifacekabaso/bookapi:0.0.1
+        image: bonifacekabaso/bookapi:0.0.3
         ports:
         - containerPort: 9000
 ---
@@ -39,6 +39,6 @@ spec:
   ports:
    - port: 80
      targetPort: 9000
-     nodePort: 30250
+     nodePort: 30151
   selector:
      app: bookapi
