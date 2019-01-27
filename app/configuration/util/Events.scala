@@ -14,6 +14,8 @@ object Events {
   def TOKENFAILMESSAGE="Token  Creation Failed "
   def TOKENVALID = "TOKEN_VALID"
   def TOKENINVALID = "TOKEN_INVALID"
+  def RESPONSE="RESPONSE"
+  def JASONPARSE = "JASON PARSE"
 
 
 }

@@ -12,9 +12,6 @@ scalaVersion := "2.12.7"
 
 scalacOptions += "-Ypartial-unification"
 
-val PhantomVersion =  "2.29.0"
-val PlayFrameWorkVersion = "2.6.20"
-val catsVersion = "1.3.1"
 
 maintainer := "Boniface Kabaso <boniface@kabaso.com>"
 packageSummary in Linux := "Book REST API"
@@ -41,6 +38,16 @@ javaOptions in Universal ++= Seq(
   "-J-Xmx4g",
   "-J-Xmn2g"
 )
+
+val PhantomVersion = "2.30.0"
+val PlayFrameWorkVersion = "2.6.20"
+val catsVersion = "1.5.0"
+val circeVersion = "0.10.0"
+val TwitterChillVersion = "0.9.3"
+val MoshiVersion ="1.8.0"
+
+libraryDependencies ++= Seq("io.circe" %% "circe-core", "io.circe" %% "circe-generic", "io.circe" %% "circe-parser"
+).map(_ % circeVersion)
 
 libraryDependencies += guice
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
