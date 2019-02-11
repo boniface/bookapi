@@ -4,6 +4,9 @@ import okhttp3.{MediaType, OkHttpClient, Request, RequestBody}
 
 object NetConnection {
 
+  lazy val apiUrl : String = Configuration.config.getString("api.baseUrl")
+  implicit val mediaType: MediaType = MediaType.parse("application/json")
+
 
   def getClient: OkHttpClient ={
     new OkHttpClient()
